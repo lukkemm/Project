@@ -1,0 +1,378 @@
+---
+title: "Project_Regression"
+author: "Lukasz Marchel"
+date: "27 12 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+setwd("C:\\Users\\Luke\\Desktop\\ML2")
+
+library(ggplot2)
+library(tidyverse) 
+library(Hmisc)
+library(tree)
+library(caret)
+library(rpart)
+library(rpart.plot)
+library(rattle)
+library(pROC)
+library(randomForest)
+library(ranger)
+library(gbm)
+library(xgboost)
+library(fastAdaboost)
+library(dplyr)
+library(tibble)
+library(readr)
+
+```
+
+
+## Problem Analyzed
+
+
+The dataset on which this project is based on contains information on the game "Fifa 19".  It is a football game with players taken from real life.  Each player is assigned an overall rank ( 0-99)  Moreover, each player is graded based on a set of skills.  Each of these skills is also ranked from 0 -99.  All players in the game are ranked by the same skills.  The aim of this project is to create a model which could predict the overall rank of a player based on the ranks of each particular skill and to find out which skills have a larger impact than others (if any).  A regression model was estimated as the target variable, Overall rank, is continuous.  
+
+
+## Initial data Analysis
+
+```{r}
+
+data <- read.csv2("ml2_data_regression.csv")
+
+glimpse(data)
+
+```
+
+
+There are 35 columns and 18,207 observations (players).  Not all columns however, can be used as variables (they are not skills). 
+
+
+```{r}
+summary(data)
+```
+
+
+After summarizing the data, we can see that most variables have 76 missing values.  After checking, these 76 values are missing for the same observations for all variables.  Hence, they will later be removed for the dataset.
+
+
+```{r}
+describe(data)
+```
+
+
+
+```{r, echo = FALSE}
+ggplot(data = data, aes(x = Overall)) +
+  geom_bar() +
+  theme_minimal()
+```
+
+
+After plotting the distribution of the target variable, we can see that, it clearly resembles a normal distribution.
+
+
+## Data Preparation
+
+In order to prepare the data for for modelling, we need to remove the columns which are not skills.  We also omit the observations with missing data (76 players total).
+
+
+
+```{r}
+data <- data.frame(data)
+
+data <- data[, -c(1, 2, 3, 6)]
+
+data <- na.omit(data)
+```
+
+Next, a correlation matrix was created in order to check the correlation between variables to see if any should be removed, however none were.
+
+```{r, echo = TRUE, results = 'hide'}
+res2 <- rcorr(as.matrix(data[, -2]))
+res2$P
+```
+
+Decision Tree
+
+
+As the first model, a simple decision tree was created.  First, however, the dataset had to be split into a training and testing sample.  The proprtions chosen were 70/30.  All predictors were used in the formula.
+
+
+```{r, echo = FALSE}
+
+set.seed(123456789)
+training_obs <- createDataPartition(data$Overall, 
+                                    p = 0.7, 
+                                    list = FALSE)
+data.train <- data[training_obs,]
+data.test  <- data[-training_obs,]
+
+model1.formula <- Overall ~ .
+
+data.tree <- tree(model1.formula, data = data)
+
+summary(data.tree)
+
+```
+
+```{r, echo = FALSE}
+plot(data.tree)
+text(data.tree, pretty = 0)
+```
+
+
+ Cross Validation
+
+
+```{r, echo = FALSE}
+
+set.seed(12345678)
+data.cv <- cv.tree(data.tree, K = 10)
+plot(data.cv$size, data.cv$dev, type = 'b')
+
+```
+
+
+We conclude from the plot above that 10 is the optimal number of nodes.
+
+
+Next we prune the tree.
+
+
+```{r}
+
+data.tree1 <- prune.tree(data.tree, best = 10)
+plot(data.tree1)
+text(data.tree1, pretty = 0)
+
+```
+
+
+Now we can make predictions.
+
+
+```{r, echo = FALSE}
+
+data.tree1.pred <- predict(data.tree1, newdata = data.test)
+plot(data.tree1.pred, data.test$Overall)
+abline(0, 1)
+
+```
+
+
+Calculating the mean square of prediciton error
+
+
+```{r}
+mean((data.tree1.pred - data.test$Overall) ^ 2)
+```
+
+
+We can calculate the mean square prediction error of the first tree and compare
+
+
+```{r, echo = FALSE}
+data.tree.pred  <- predict(data.tree,  newdata = data.test)
+mean((data.tree.pred  - data.test$Overall) ^ 2)
+```
+
+
+Simple linear model and its mean square prediction error
+
+
+```{r, echo = FALSE}
+data.lm.pred <- predict(lm(Overall ~ ., data = data.train), data.test)
+mean((data.lm.pred - data.test$Overall) ^ 2)
+```
+
+```{r}
+plot(data.lm.pred, data.test$Overall)
+```
+
+
+It looks like the the simple linear regression actually has the lowest prediction error.
+
+
+Random Forest Model
+
+
+Creating a regular random forest model from which we can see that the optimal
+number of trees is around 100.
+
+```{r}
+
+set.seed(123456789)
+data.rf <- randomForest(model1.formula, 
+                           data = data.train)
+
+print(data.rf)
+
+```
+
+```{r}
+plot(data.rf)
+```
+
+
+Creating the random forest with 100 trees.
+
+
+```{r}
+data.rf2 <- 
+  randomForest(model1.formula,
+               data = data.train,
+               ntree = 100,
+               sampsize = nrow(data.train),
+               mtry = 10,
+               nodesize = 100,
+               importance = TRUE)
+print(data.rf2)
+```
+
+
+```{r}
+plot(data.rf2)
+```
+
+
+Cross validation of the random tree.
+
+
+```{r}
+parameters_rf <- expand.grid(mtry = 2:10)
+ctrl_cv1 <- trainControl(method = "cv")
+
+set.seed(123456789)
+data.rf3 <- train(model1.formula,
+        data = data.train,
+        method = "rf",
+        ntree = 100,
+        nodesize = 100,
+        Tunegrid = parameters_rf,
+        trControl = ctrl_cv1,
+        importance = TRUE)
+```
+
+In the end mtry = 15 was used (optimal because the RMSE is the lowest, calculated automatically)
+
+```{r, echo = FALSE}
+data.rf3
+plot(data.rf3)
+```
+
+
+Calculating the predictions and prediction errors of the random trees
+
+
+```{r}
+data.rf3.pred <- predict(data.rf3, newdata = data.test)
+plot(data.rf3.pred, data.test$Overall)
+abline(0, 1)
+mean((data.rf3.pred - data.test$Overall) ^ 2)
+```
+
+
+```{r}
+data.rf2.pred <- predict(data.rf2, newdata = data.test)
+plot(data.rf2.pred, data.test$Overall)
+abline(0, 1)
+
+mean((data.rf2.pred - data.test$Overall) ^ 2)
+```
+
+
+```{r}
+data.rf.pred <- predict(data.rf, newdata = data.test)
+plot(data.rf.pred, data.test$Overall)
+abline(0, 1)
+
+mean((data.rf.pred - data.test$Overall) ^ 2)
+```
+
+ 
+Random Forest results: 
+ 
+ 
+data.rf3 is best because it is cross-validated. The Mean Square Error of the cross validated model is actually the highest among the random forest models. However, it in general is a less biased (or optimistic) estimate of the model skill than of a simple train/test split.
+
+
+Boosting
+
+
+Training the model with gbm with arbitrary values.
+```{r}
+
+model3.formula <- Overall ~ .
+set.seed(123456789)
+data.gbm <- 
+  gbm(model3.formula,
+      data = data.train,
+      distribution = "gaussian",
+      # total number of trees
+      n.trees = 500,
+      # number of variable interactions - actually depth of the trees
+      interaction.depth = 4,
+      # shrinkage parameter - speed (pace) of learning
+      shrinkage = 0.01,
+      verbose = FALSE)
+
+```
+
+
+Generating a prediction on the dataset.
+
+
+```{r}
+
+data.pred.test.gbm <- predict(data.gbm,
+                                 data.test,
+                                 n.trees = 500)
+```
+
+
+Tuning of parameters
+
+
+```{r}
+modelLookup("gbm")
+parameters_gbm <- expand.grid(interaction.depth = c(1, 2, 4),
+                              n.trees = c(100, 500),
+                              shrinkage = c(0.01, 0.1), 
+                              n.minobsinnode = c(100, 250, 500))
+ctrl_cv3 <- trainControl(method = "cv", 
+                         number = 3)
+
+
+  set.seed(123456789)
+  data.gbm2  <- train(model3.formula,
+                         data = data.train,
+                         distribution = "gaussian",
+                         method = "gbm",
+                         tuneGrid = parameters_gbm,
+                         trControl = ctrl_cv3,
+                         verbose = FALSE)
+data.gbm2
+```
+The optimal number of trees is 500.
+
+
+Prediction error on testing set (which is the same as the prediction before cross-validation, because the optimal value of ntrees was set to 500)
+
+```{r}
+data.pred.test.gbm2 <- predict(data.gbm2,
+                                    data.test,
+                                    n.trees = 500)
+mean((data.pred.test.gbm2 - data.test$Overall) ^ 2)
+```
+
+```{r}
+plot(data.pred.test.gbm2)
+```
+
+
+## Conclusions
+
+The Mean Square Error is the lowest for the random forest model, however it is only slightly better than that of the boosted model using gbm. The gbm technique however, is much faster therefore it is more optimal.  The simple decision tree and linear model fell far behind in terms of prediction accuracy.  The final model which uses teh gbm method  was cross-validated and set the parameter ntrees to 500 has that was found to be optimal.  Shrinkage was set to 0.1 and interaction.depth was 4.  R squared is equal to 0.917.  In summary, the model created to predict the Overall rank of Fifa19 players seems to be quite satisfactory.  
+
