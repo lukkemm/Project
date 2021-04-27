@@ -6,7 +6,4 @@ this is for you to see
 
 
 can you read this Luke? :D
-
-
-
-Abcdefghijklmnopqrstuvwxyz
+writing another liiine
