@@ -7,9 +7,6 @@ output: html_document
 
 ```{r setup, include=FALSE}
 
-#Working Directory for Sebastian
-setwd("/home/sebastian/Desktop/Reproducible Research/Project") 
- 
 pkgLoad <- function(x)
   {
     if (!require(x,character.only = TRUE))
