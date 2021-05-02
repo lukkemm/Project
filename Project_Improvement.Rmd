@@ -35,6 +35,7 @@ pkgLoad("fastAdaboost")
 pkgLoad("dplyr")
 pkgLoad("tibble")
 pkgLoad("readr")
+pkgLoad("lmtest")
 ```
 
 ## Problem Analyzed
@@ -125,7 +126,7 @@ Ramsey Reset Test
 
 ```{r}
 
-library(lmtest)
+
 resettest(lm(Overall ~ ., data = data.train))
 
 ```
