@@ -7,7 +7,8 @@ output: html_document
 
 ```{r setup, include=FALSE}
 
-setwd("/home/sebastian/Desktop/Reproducible Research/Project")
+#Working Directory for Sebastian
+setwd("/home/sebastian/Desktop/Reproducible Research/Project") 
  
 pkgLoad <- function(x)
   {
@@ -17,8 +18,8 @@ pkgLoad <- function(x)
       if(!require(x,character.only = TRUE)) stop("Package not found")
     }
     #now load library and suppress warnings
-    suppressPackageStartupMessages(library(x))
-    library(x)
+   
+    library(x, character.only=TRUE)
 }
 
 pkgLoad("ggplot2")
