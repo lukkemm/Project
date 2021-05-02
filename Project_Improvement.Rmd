@@ -131,4 +131,9 @@ resettest(lm(Overall ~ ., data = data.train))
 
 ```
 
+```{r, echo = TRUE, results = 'hide'}
+res2 <- rcorr(as.matrix(data[, -2]))
+res2$P
+```
+
 
