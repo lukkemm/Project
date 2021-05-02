@@ -184,5 +184,5 @@ p11 <- ggplot(data, aes(x = Accelaration, y = Overall)) + geom_point()
 
 library(gridExtra)
 
-grid.arrange(p1,p2,p3, p4, p5, p6, p7, p8, p9, nrow = 2)
+grid.arrange(p1,p2,p3, p4, p5, p6, p7, p8, p9, p10, p11, nrow = 2)
 ```
