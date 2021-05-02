@@ -147,6 +147,12 @@ data <- data[,-20]
 ```
 
 ```{r}
+set.seed(123456789)
+training_obs <- createDataPartition(data$Overall, 
+                                    p = 0.7, 
+                                    list = FALSE)
+data.train <- data[training_obs,]
+data.test  <- data[-training_obs,]
 
 lm(Overall ~ ., data = data.train)
 resettest(lm(Overall ~ ., data = data.train))
