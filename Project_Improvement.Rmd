@@ -203,6 +203,7 @@ p28 <- ggplot(data, aes(x = SlidingTackle, y = Overall)) + geom_point()
 
 library(gridExtra)
 
+<<<<<<< HEAD
 grid.arrange(p1,p2,p3, p4, p5, p6, nrow = 3 )
 
 grid.arrange(p7, p8, p9, p10,p11,p12, nrow = 3)
@@ -214,4 +215,7 @@ grid.arrange(p19,p20,p21,p22,p23,p24,  nrow = 3)
 grid.arrange(p25,p26,p27,p28,  nrow = 2)
 
 
+=======
+grid.arrange(p1,p2,p3, p4, p5, p6, p7, p8, p9, p10, p11, nrow = 2)
+>>>>>>> d8e6a172f3402c955a5418ee086098b9132d3a1c
 ```
