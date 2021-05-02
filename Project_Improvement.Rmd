@@ -130,5 +130,28 @@ library(lmtest)
 resettest(lm(Overall ~ ., data = data.train))
 
 ```
+```{r}
+ggplot( data= data, aes(x = Overall, y = Age)) + geom_point()
+res2 <- rcorr(as.matrix(data[, -2]))
+```
+
+
+Removing the highly correlated variables (Strength and Dribbling)
+
+
+```{r}
+
+data <- data[,-8]
+data <- data[,-20]
+
+```
+
+```{r}
+
+lm(Overall ~ ., data = data.train)
+resettest(lm(Overall ~ ., data = data.train))
+
+```
+
 
 
