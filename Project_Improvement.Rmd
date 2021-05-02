@@ -174,7 +174,8 @@ res2$P
 ```{r}
 
 
-lm(log(Overall) ~ ., data = data.train)
+model1 <-lm(log(Overall) ~ ., data = data.train)
+model1
 resettest(lm(log(Overall) ~ ., data = data.train))
 
 ```
@@ -235,10 +236,12 @@ grid.arrange(p25,p26,p27,p28,  nrow = 2)
 ```{r}
 
 
-lm(log(Overall) ~  Age + log(Crossing)+ log(Finishing)+ log(HeadingAccuracy)+ log(ShortPassing)+ log(Volleys)+ log(Curve)+ log(FKAccuracy)+ log(LongPassing)+
+model2 <-lm(log(Overall) ~  Age + log(Crossing)+ log(Finishing)+ log(HeadingAccuracy)+ log(ShortPassing)+ log(Volleys)+ log(Curve)+ log(FKAccuracy)+ log(LongPassing)+
      log(BallControl)+Acceleration+SprintSpeed+Agility+Reactions+Balance+ShotPower+
      Jumping+Stamina+log(LongShots)+Aggression+log(Interceptions)+log(Positioning)+ log(Vision)+ Penalties+
      Composure+Marking+StandingTackle+ SlidingTackle, data = data.train)
+
+model2
 resettest(lm(log(Overall) ~ Age + log(Crossing)+ log(Finishing)+ log(HeadingAccuracy)+ log(ShortPassing)+ log(Volleys)+ log(Curve)+ log(FKAccuracy)+ log(LongPassing)+
      log(BallControl)+Acceleration+SprintSpeed+Agility+Reactions+Balance+ShotPower+
      Jumping+Stamina+log(LongShots)+Aggression+log(Interceptions)+log(Positioning)+ log(Vision)+ Penalties+
@@ -247,15 +250,52 @@ resettest(lm(log(Overall) ~ Age + log(Crossing)+ log(Finishing)+ log(HeadingAccu
 ```
 
 ```{r}
+summary(model2)
+```
+
+```{r}
+#Prozess of deleting insignificant variables
+
+model2.1 <-lm(log(Overall) ~  Age + log(Crossing)+ log(Finishing)+ log(HeadingAccuracy)+ log(ShortPassing)+  log(Curve)+ log(FKAccuracy)+ log(LongPassing)+
+     log(BallControl)+Acceleration+SprintSpeed+Agility+Reactions+Balance+ShotPower+
+     Jumping+Stamina+log(LongShots)+Aggression+log(Interceptions)+log(Positioning)+ log(Vision)+ Penalties+
+     Composure+Marking+StandingTackle+ SlidingTackle, data = data.train)
+
+summary(model2.1)
 
 
-lm(log(Overall) ~  Age + log(Crossing)+ log(Finishing)+ log(HeadingAccuracy)+ log(ShortPassing)+ log(Volleys)+ log(Curve)+ log(FKAccuracy)+ log(LongPassing)+
-     log(BallControl)+Acceleration+SprintSpeed+Agility+Reactions+Balance+ShotPower+
-     Jumping+Stamina+log(LongShots)+Aggression+log(Interceptions)+log(Positioning)+ log(Vision)+ log(Penalties)+
-     log(Composure)+log(Marking)+log(StandingTackle)+ log(SlidingTackle), data = data.train)
-resettest(lm(log(Overall) ~ Age + log(Crossing)+ log(Finishing)+ log(HeadingAccuracy)+ log(ShortPassing)+ log(Volleys)+ log(Curve)+ log(FKAccuracy)+ log(LongPassing)+
-     log(BallControl)+Acceleration+SprintSpeed+Agility+Reactions+Balance+ShotPower+
-     Jumping+Stamina+log(LongShots)+Aggression+log(Interceptions)+log(Positioning)+ log(Vision)+ log(Penalties)+
-     log(Composure)+log(Marking)+log(StandingTackle)+ log(SlidingTackle), data = data.train))
 
 ```
+
+
+```{r}
+#Prozess of deleting insignificant variables
+
+model2.2 <-lm(log(Overall) ~  Age + log(Finishing)+ log(HeadingAccuracy)+ log(ShortPassing)+  log(Curve)+ log(FKAccuracy)+ log(LongPassing)+
+     log(BallControl)+Acceleration+SprintSpeed+Agility+Reactions+Balance+ShotPower+
+     Jumping+Stamina+log(LongShots)+Aggression+log(Interceptions)+log(Positioning)+ log(Vision)+ Penalties+
+     Composure+Marking+StandingTackle+ SlidingTackle, data = data.train)
+
+summary(model2.2)
+
+
+
+```
+
+```{r}
+#New model with only significant variables
+
+model3 <-lm(log(Overall) ~  Age + log(Finishing)+ log(HeadingAccuracy)+ log(ShortPassing)+  log(Curve)+ log(FKAccuracy)+ 
+     log(BallControl)+Acceleration+SprintSpeed+Agility+Reactions+Balance+ShotPower+
+     Jumping+Stamina+log(LongShots)+Aggression+log(Interceptions)+log(Positioning)+ log(Vision)+ Penalties+
+     Composure+Marking+StandingTackle+ SlidingTackle, data = data.train)
+
+summary(model3)
+
+resettest(lm(log(Overall) ~ Age + log(Finishing)+ log(HeadingAccuracy)+ log(ShortPassing)+  log(Curve)+ log(FKAccuracy)+ 
+     log(BallControl)+Acceleration+SprintSpeed+Agility+Reactions+Balance+ShotPower+
+     Jumping+Stamina+log(LongShots)+Aggression+log(Interceptions)+log(Positioning)+ log(Vision)+ Penalties+
+     Composure+Marking+StandingTackle+ SlidingTackle, data = data.train))
+
+```
+
