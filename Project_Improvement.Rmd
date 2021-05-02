@@ -107,10 +107,6 @@ data.test  <- data[-training_obs,]
 
 model1.formula <- Overall ~ .
 
-data.tree <- tree(model1.formula, data = data)
-
-summary(data.tree)
-
 ```
 
 Simple linear model and its mean square prediction error
@@ -124,3 +120,15 @@ mean((data.lm.pred - data.test$Overall) ^ 2)
 ```{r}
 plot(data.lm.pred, data.test$Overall)
 ```
+
+
+Ramsey Reset Test
+
+```{r}
+
+library(lmtest)
+resettest(lm(Overall ~ ., data = data.train))
+
+```
+
+
