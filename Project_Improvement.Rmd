@@ -217,3 +217,26 @@ grid.arrange(p25,p26,p27,p28,  nrow = 2)
 
 
 ```
+
+
+```{r}
+
+
+lm(log(Overall) ~ ., data = data.train)
+resettest(lm(log(Overall) ~ ., data = data.train))
+
+```
+
+```{r}
+
+
+lm(log(Overall) ~  Age + Crossing+ Finishing+ HeadingAccuracy+ ShortPassing+ Volleys+ Curve+ FKAccuracy+ LongPassing+
+     BallControl+Acceleration+SprintSpeed+Agility+Reactions+Balance+ShotPower+
+     Jumping+Stamina+LongShots+Aggression+Interceptions+Positioning+ Vision+ Penalties+
+     Composure+Marking+StandingTackle+ SlidingTackle, data = data.train)
+resettest(lm(log(Overall) ~ Age + Crossing+ Finishing+ HeadingAccuracy+ ShortPassing+ Volleys+ Curve+ FKAccuracy+
+               LongPassing+BallControl+Acceleration+SprintSpeed+Agility+Reactions+Balance+ShotPower+
+               Jumping+Stamina+LongShots+Aggression+Interceptions+Positioning+ Vision+ Penalties+
+               Composure+Marking+StandingTackle+ SlidingTackle, data = data.train))
+
+```
