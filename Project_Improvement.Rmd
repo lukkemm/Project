@@ -1,12 +1,27 @@
 ---
 title: "Project Improvement"
-author: "Lukasz Marchel"
+author: "Lukasz Marchel, Sebastian Kremer"
 date: "5/2/2021"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 
+setwd("/home/sebastian/Desktop/Reproducible Research/Project")
+ 
+pkgLoad <- function(x)
+  {
+    if (!require(x,character.only = TRUE))
+    {
+      install.packages(x,dep=TRUE, repos='http://star-www.st-andrews.ac.uk/cran/')
+      if(!require(x,character.only = TRUE)) stop("Package not found")
+    }
+    #now load library and suppress warnings
+    suppressPackageStartupMessages(library(x))
+    library(x)
+}
+
+pkgLoad("ggplot2")
 ```
 
 
