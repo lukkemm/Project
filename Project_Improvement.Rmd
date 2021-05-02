@@ -131,8 +131,9 @@ resettest(lm(Overall ~ ., data = data.train))
 
 ```
 ```{r}
-ggplot( data= data, aes(x = Overall, y = Age)) + geom_point()
+
 res2 <- rcorr(as.matrix(data[, -2]))
+res2$P
 ```
 
 
@@ -166,3 +167,15 @@ res2$P
 ```
 
 
+```{r, echo = TRUE, results = 'hide'}
+#multiplots for scatterplots between dependent variable and the independent variables
+
+p1 <- ggplot(data, aes(x = SprintSpeed, y = Overall)) + geom_point()
+
+
+p2 <- ggplot(data, aes(x = Agility, y = Overall)) + geom_point()
+
+library(gridExtra)
+
+grid.arrange(p1,p2, nrow = 2)
+```
