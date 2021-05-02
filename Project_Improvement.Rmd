@@ -283,6 +283,19 @@ summary(model2.2)
 
 ```
 
+
+
+```{r}
+data$log_overall <- log(data$Overall)
+set.seed(123456789)
+training_obs <- createDataPartition(data$Overall, 
+                                    p = 0.7, 
+                                    list = FALSE)
+data.train <- data[training_obs,]
+data.test  <- data[-training_obs,]
+```
+
+
 ```{r}
 #New model with only significant variables
 
@@ -300,3 +313,19 @@ resettest(lm(log(Overall) ~ Age + log(Finishing)+ log(HeadingAccuracy)+ log(Shor
 
 ```
 
+
+model 0 
+
+
+```{r}
+data.lm.pred <- predict(lm(Overall ~ ., data = data.train), data.test)
+mean((data.lm.pred - data.test$Overall) ^ 2)
+```
+
+model 3
+
+
+```{r}
+data.lm.pred <- predict(model3, data.test)
+mean((data.lm.pred - data.test$log_overall) ^ 2)
+```
