@@ -170,6 +170,7 @@ res2$P
 ```{r, echo = TRUE, results = 'hide'}
 #multiplots for scatterplots between dependent variable and the independent variables
 
+
 p1 <- ggplot(data, aes(x = Age, y = Overall)) + geom_point()
 p2 <- ggplot(data, aes(x = Crossing, y = Overall)) + geom_point()
 p3 <- ggplot(data, aes(x = Finishing, y = Overall)) + geom_point()
@@ -180,9 +181,37 @@ p7 <- ggplot(data, aes(x = Curve, y = Overall)) + geom_point()
 p8 <- ggplot(data, aes(x = FKAccuracy, y = Overall)) + geom_point()
 p9 <- ggplot(data, aes(x = LongPassing, y = Overall)) + geom_point()
 p10 <- ggplot(data, aes(x = BallControl, y = Overall)) + geom_point()
-p11 <- ggplot(data, aes(x = Accelaration, y = Overall)) + geom_point()
+p11 <- ggplot(data, aes(x = Acceleration, y = Overall)) + geom_point()
+
+p12 <- ggplot(data, aes(x = SprintSpeed, y = Overall)) + geom_point()
+p13 <- ggplot(data, aes(x = Agility, y = Overall)) + geom_point()
+p14 <- ggplot(data, aes(x = Reactions, y = Overall)) + geom_point()
+p15 <- ggplot(data, aes(x = Balance, y = Overall)) + geom_point()
+p16 <- ggplot(data, aes(x = ShotPower, y = Overall)) + geom_point()
+p17 <- ggplot(data, aes(x = Jumping, y = Overall)) + geom_point()
+p18 <- ggplot(data, aes(x = Stamina, y = Overall)) + geom_point()
+p19 <- ggplot(data, aes(x = LongShots, y = Overall)) + geom_point()
+p20 <- ggplot(data, aes(x = Aggression, y = Overall)) + geom_point()
+p21 <- ggplot(data, aes(x = Interceptions, y = Overall)) + geom_point()
+p22 <- ggplot(data, aes(x = Positioning, y = Overall)) + geom_point()
+p23 <- ggplot(data, aes(x = Vision, y = Overall)) + geom_point()
+p24 <- ggplot(data, aes(x = Penalties, y = Overall)) + geom_point()
+p25 <- ggplot(data, aes(x = Composure, y = Overall)) + geom_point()
+p26 <- ggplot(data, aes(x = Marking, y = Overall)) + geom_point()
+p27 <- ggplot(data, aes(x = StandingTackle, y = Overall)) + geom_point()
+p28 <- ggplot(data, aes(x = SlidingTackle, y = Overall)) + geom_point()
 
 library(gridExtra)
 
-grid.arrange(p1,p2,p3, p4, p5, p6, p7, p8, p9, nrow = 2)
+grid.arrange(p1,p2,p3, p4, p5, p6, nrow = 3 )
+
+grid.arrange(p7, p8, p9, p10,p11,p12, nrow = 3)
+
+grid.arrange(p13,p14,p15,p16,p17,p18,  nrow = 3)
+
+grid.arrange(p19,p20,p21,p22,p23,p24,  nrow = 3)
+
+grid.arrange(p25,p26,p27,p28,  nrow = 2)
+
+
 ```
