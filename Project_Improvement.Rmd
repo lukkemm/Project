@@ -20,6 +20,22 @@ pkgLoad <- function(x)
 }
 
 pkgLoad("ggplot2")
+pkgLoad(tidyverse) 
+pkgLoad(Hmisc)
+pkgLoad(tree)
+pkgLoad(caret)
+pkgLoad(rpart)
+pkgLoad(rpart.plot)
+pkgLoad(rattle)
+pkgLoad(pROC)
+pkgLoad(randomForest)
+pkgLoad(ranger)
+pkgLoad(gbm)
+pkgLoad(xgboost)
+pkgLoad(fastAdaboost)
+pkgLoad(dplyr)
+pkgLoad(tibble)
+pkgLoad(readr)
 ```
 
 
