@@ -156,7 +156,8 @@ training_obs <- createDataPartition(data$Overall,
 data.train <- data[training_obs,]
 data.test  <- data[-training_obs,]
 
-lm(Overall ~ ., data = data.train)
+model0 <- lm(Overall ~ ., data = data.train)
+summary(model0)
 resettest(lm(Overall ~ ., data = data.train))
 
 ```
