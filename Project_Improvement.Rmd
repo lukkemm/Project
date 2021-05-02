@@ -19,23 +19,23 @@ pkgLoad <- function(x)
     library(x, character.only=TRUE)
 }
 
-# pkgLoad("ggplot2")
-# pkgLoad(tidyverse) 
-# pkgLoad(Hmisc)
-# pkgLoad(tree)
-# pkgLoad(caret)
-# pkgLoad(rpart)
-# pkgLoad(rpart.plot)
-# pkgLoad(rattle)
-# pkgLoad(pROC)
-# pkgLoad(randomForest)
-# pkgLoad(ranger)
-# pkgLoad(gbm)
-# pkgLoad(xgboost)
-# pkgLoad(fastAdaboost)
-# pkgLoad(dplyr)
-# pkgLoad(tibble)
-# pkgLoad(readr)
+pkgLoad("ggplot2")
+pkgLoad("tidyverse")
+pkgLoad("Hmisc")
+pkgLoad("tree")
+pkgLoad("caret")
+pkgLoad("rpart")
+pkgLoad("rpart.plot")
+pkgLoad("rattle")
+pkgLoad("pROC")
+pkgLoad("ranger")
+pkgLoad("gbm")
+pkgLoad("xgboost")
+pkgLoad("fastAdaboost")
+pkgLoad("dplyr")
+pkgLoad("tibble")
+pkgLoad("readr")
+pkgLoad("lmtest")
 ```
 
 ## Problem Analyzed
@@ -126,7 +126,7 @@ Ramsey Reset Test
 
 ```{r}
 
-library(lmtest)
+
 resettest(lm(Overall ~ ., data = data.train))
 
 ```
@@ -153,5 +153,10 @@ resettest(lm(Overall ~ ., data = data.train))
 
 ```
 
+
+```{r, echo = TRUE, results = 'hide'}
+res2 <- rcorr(as.matrix(data[, -2]))
+res2$P
+```
 
 
