@@ -150,17 +150,23 @@ data <- data[,-20]
 
 ```{r}
 set.seed(123456789)
+data$log_overall <- log(data$Overall)
 training_obs <- createDataPartition(data$Overall, 
                                     p = 0.7, 
                                     list = FALSE)
 data.train <- data[training_obs,]
 data.test  <- data[-training_obs,]
 
-model0 <- lm(Overall ~ ., data = data.train)
+model0 <- lm(Overall ~ Age + Crossing+ Finishing+ HeadingAccuracy+ ShortPassing+ Volleys+ Curve+ FKAccuracy+ LongPassing+
+     BallControl + Acceleration+SprintSpeed+Agility+Reactions+Balance+ShotPower+
+     Jumping+Stamina+log(LongShots)+Aggression+Interceptions+Positioning+ Vision+ Penalties+
+     Composure+Marking+StandingTackle+ SlidingTackle, data = data.train)
+
 summary(model0)
 resettest(lm(Overall ~ ., data = data.train))
 
 ```
+
 
 
 ```{r, echo = TRUE, results = 'hide'}
@@ -285,16 +291,6 @@ summary(model2.2)
 
 
 
-```{r}
-data$log_overall <- log(data$Overall)
-set.seed(123456789)
-training_obs <- createDataPartition(data$Overall, 
-                                    p = 0.7, 
-                                    list = FALSE)
-data.train <- data[training_obs,]
-data.test  <- data[-training_obs,]
-```
-
 
 ```{r}
 #New model with only significant variables
@@ -318,14 +314,19 @@ model 0
 
 
 ```{r}
-data.lm.pred <- predict(lm(Overall ~ ., data = data.train), data.test)
-mean((data.lm.pred - data.test$Overall) ^ 2)
+
+summary(model0)
+dataPredict0 <- predict(model0, data.test)
+mean((dataPredict0 - data.test$Overall) ^ 2)
 ```
 
 model 3
 
 
 ```{r}
-data.lm.pred <- predict(model3, data.test)
-mean((data.lm.pred - data.test$log_overall) ^ 2)
+summary(model3)
+dataPredict3 <- predict(model3, data.test)
+
+dataPredict3 <- exp(dataPredict3)
+mean((dataPredict3 - data.test$Overall) ^ 2)
 ```
