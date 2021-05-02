@@ -19,33 +19,108 @@ pkgLoad <- function(x)
     library(x, character.only=TRUE)
 }
 
-pkgLoad("ggplot2")
-pkgLoad(tidyverse) 
-pkgLoad(Hmisc)
-pkgLoad(tree)
-pkgLoad(caret)
-pkgLoad(rpart)
-pkgLoad(rpart.plot)
-pkgLoad(rattle)
-pkgLoad(pROC)
-pkgLoad(randomForest)
-pkgLoad(ranger)
-pkgLoad(gbm)
-pkgLoad(xgboost)
-pkgLoad(fastAdaboost)
-pkgLoad(dplyr)
-pkgLoad(tibble)
-pkgLoad(readr)
+# pkgLoad("ggplot2")
+# pkgLoad(tidyverse) 
+# pkgLoad(Hmisc)
+# pkgLoad(tree)
+# pkgLoad(caret)
+# pkgLoad(rpart)
+# pkgLoad(rpart.plot)
+# pkgLoad(rattle)
+# pkgLoad(pROC)
+# pkgLoad(randomForest)
+# pkgLoad(ranger)
+# pkgLoad(gbm)
+# pkgLoad(xgboost)
+# pkgLoad(fastAdaboost)
+# pkgLoad(dplyr)
+# pkgLoad(tibble)
+# pkgLoad(readr)
 ```
 
+## Problem Analyzed
+
+
+The dataset on which this project is based on contains information on the game "Fifa 19".  It is a football game with players taken from real life.  Each player is assigned an overall rank ( 0-99)  Moreover, each player is graded based on a set of skills.  Each of these skills is also ranked from 0 -99.  All players in the game are ranked by the same skills.  The aim of this project is to create a model which could predict the overall rank of a player based on the ranks of each particular skill and to find out which skills have a larger impact than others (if any).  A regression model was estimated as the target variable, Overall rank, is continuous.  
+
+
+## Initial data Analysis
 
 ```{r}
 
+data <- read.csv2("ml2_dataFromInitialProject.csv")
+
+glimpse(data)
+
 ```
+
+
+There are 35 columns and 18,207 observations (players).  Not all columns however, can be used as variables (they are not skills). 
 
 
 ```{r}
-
+summary(data)
 ```
 
 
+After summarizing the data, we can see that most variables have 76 missing values.  After checking, these 76 values are missing for the same observations for all variables.  Hence, they will later be removed for the dataset.
+
+
+```{r}
+describe(data)
+```
+
+
+
+```{r, echo = FALSE}
+ggplot(data = data, aes(x = Overall)) +
+  geom_bar() +
+  theme_minimal()
+```
+
+
+After plotting the distribution of the target variable, we can see that, it clearly resembles a normal distribution.
+
+## Data Preparation
+
+In order to prepare the data for for modelling, we need to remove the columns which are not skills.  We also omit the observations with missing data (76 players total).
+
+
+
+```{r}
+data <- data.frame(data)
+
+data <- data[, -c(1, 2, 3, 6)]
+
+data <- na.omit(data)
+```
+
+
+```{r, echo = FALSE}
+
+set.seed(123456789)
+training_obs <- createDataPartition(data$Overall, 
+                                    p = 0.7, 
+                                    list = FALSE)
+data.train <- data[training_obs,]
+data.test  <- data[-training_obs,]
+
+model1.formula <- Overall ~ .
+
+data.tree <- tree(model1.formula, data = data)
+
+summary(data.tree)
+
+```
+
+Simple linear model and its mean square prediction error
+
+
+```{r, echo = FALSE}
+data.lm.pred <- predict(lm(Overall ~ ., data = data.train), data.test)
+mean((data.lm.pred - data.test$Overall) ^ 2)
+```
+
+```{r}
+plot(data.lm.pred, data.test$Overall)
+```
