@@ -6,11 +6,6 @@ output: html_document
 ---
 
 
-```{css, include=FALSE}
-.colorCode {
-background-color: lightgreen;
-}
-```
 
 ```{r setup, include=FALSE}
 
@@ -46,6 +41,11 @@ pkgLoad("lmtest")
 pkgLoad("gridExtra")
 ```
 
+```{css}
+.colorCode {
+background-color: lightgreen;
+}
+```
 ## Problem Analyzed
 
 
@@ -70,7 +70,7 @@ glimpse(data)
 There are 35 columns and 18,207 observations (players).  Not all columns however, can be used as variables (they are not skills). 
 
 
-```{r}
+```{r , class.source="colorCode"}
 summary(data)
 ```
 
@@ -78,7 +78,7 @@ summary(data)
 After summarizing the data, we can see that most variables have 76 missing values.  After checking, these 76 values are missing for the same observations for all variables.  Hence, they will later be removed for the dataset.
 
 
-```{r, echo=TRUE, results = 'hide'}
+```{r, echo=TRUE, results = 'hide' , class.source="colorCode"}
 describe(data)
 ```
 
@@ -99,7 +99,7 @@ In order to prepare the data for for modelling, we need to remove the columns wh
 
 
 
-```{r}
+```{r , class.source="colorCode"}
 data <- data.frame(data)
 
 data <- data[, -c(1, 2, 3, 6)]
@@ -130,11 +130,11 @@ data.lm.pred <- predict(lm(Overall ~ ., data = data.train), data.test)
 mean((data.lm.pred - data.test$Overall) ^ 2)
 ```
 
-```{r}
+```{r , class.source="colorCode"}
 plot(data.lm.pred, data.test$Overall)
 ```
 
-```{r, echo=TRUE, results='hide'}
+```{r, echo=TRUE, results='hide' , class.source="colorCode"}
 summary(lm(Overall ~ ., data = data.train))
 ```
 
@@ -142,7 +142,7 @@ summary(lm(Overall ~ ., data = data.train))
 
 Ramsey Reset Test
 
-```{r, echo=TRUE, results='hide'}
+```{r, echo=TRUE, results='hide' , class.source="colorCode"}
 
 
 resettest(lm(Overall ~ ., data = data.train))
@@ -158,7 +158,7 @@ res2$P
 Removing the highly correlated variables (Strength and Dribbling)
 
 
-```{r}
+```{r , class.source="colorCode"}
 
 data <- data[,-8]
 data <- data[,-20]
@@ -199,7 +199,7 @@ resettest(lm(Overall ~ Age + Crossing+ Finishing+ HeadingAccuracy+ ShortPassing+
 We create the correlation matrix again, but decide not to remove any of the variables.
 
 
-```{r, echo = TRUE, results='hide'}
+```{r, echo = TRUE, results='hide' , class.source="colorCode"}
 res2 <- rcorr(as.matrix(data[, -2]))
 res2$P
 ```
@@ -208,7 +208,7 @@ res2$P
 
 
 
-```{r, include = FALSE}
+```{r, include = FALSE }
 
 
 model1 <-lm(log(Overall) ~ ., data = data.train)
@@ -278,7 +278,7 @@ Next, we estimate the new model.
 
 
 
-```{r}
+```{r , class.source="colorCode"}
 
 
 model2 <-lm(log(Overall) ~  Age + log(Crossing)+ log(Finishing)+ log(HeadingAccuracy)+ log(ShortPassing)+ log(Volleys)+ log(Curve)+ log(FKAccuracy)+ log(LongPassing)+
@@ -294,7 +294,7 @@ resettest(lm(log(Overall) ~ Age + log(Crossing)+ log(Finishing)+ log(HeadingAccu
 
 ```
 
-```{r}
+```{r , class.source="colorCode"}
 summary(model2)
 ```
 
@@ -302,7 +302,7 @@ summary(model2)
 Process of deleting insignificant variables, one at a time.
 
 
-```{r, echo=TRUE, results='hide'}
+```{r, echo=TRUE, results='hide' , class.source="colorCode"}
 model2.1 <-lm(log(Overall) ~  Age + log(Crossing)+ log(Finishing)+ log(HeadingAccuracy)+ log(ShortPassing)+  log(Curve)+ log(FKAccuracy)+ log(LongPassing)+
      log(BallControl)+Acceleration+SprintSpeed+Agility+Reactions+Balance+ShotPower+
      Jumping+Stamina+log(LongShots)+Aggression+log(Interceptions)+log(Positioning)+ log(Vision)+ Penalties+
@@ -315,7 +315,7 @@ summary(model2.1)
 One more variable removed.
 
 
-```{r, echo=TRUE, results= 'hide'}
+```{r, echo=TRUE, results= 'hide' , class.source="colorCode"}
 model2.2 <-lm(log(Overall) ~  Age + log(Finishing)+ log(HeadingAccuracy)+ log(ShortPassing)+  log(Curve)+ log(FKAccuracy)+ log(LongPassing)+
      log(BallControl)+Acceleration+SprintSpeed+Agility+Reactions+Balance+ShotPower+
      Jumping+Stamina+log(LongShots)+Aggression+log(Interceptions)+log(Positioning)+ log(Vision)+ Penalties+
@@ -346,7 +346,7 @@ resettest(lm(log(Overall) ~ Age + log(Finishing)+ log(HeadingAccuracy)+ log(Shor
 The initial model
 
 
-```{r}
+```{r , class.source="colorCode"}
 
 summary(model0)
 dataPredict0 <- predict(model0, data.test)
@@ -357,7 +357,7 @@ mean((dataPredict0 - data.test$Overall) ^ 2)
 Our final improved model
 
 
-```{r}
+```{r , class.source="colorCode"}
 summary(model3)
 dataPredict3 <- predict(model3, data.test)
 
