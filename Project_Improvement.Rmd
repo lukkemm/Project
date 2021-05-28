@@ -5,6 +5,13 @@ date: "5/2/2021"
 output: html_document
 ---
 
+
+```{css, include=FALSE}
+.colorCode {
+background-color: lightgreen;
+}
+```
+
 ```{r setup, include=FALSE}
 
 pkgLoad <- function(x)
@@ -51,7 +58,7 @@ The purpose of this project is to take the linear econometric model that was use
 
 ## Initial data Analysis
 
-```{r, echo=TRUE, results='hide'}
+```{r, echo=TRUE, results='hide', class.source="colorCode"}
 
 data <- read.csv2("ml2_dataFromInitialProject.csv")
 
