@@ -51,7 +51,7 @@ The purpose of this project is to take the linear econometric model that was use
 
 ## Initial data Analysis
 
-```{r, results = FALSE}
+```{r, echo=TRUE, results='hide'}
 
 data <- read.csv2("ml2_dataFromInitialProject.csv")
 
@@ -71,7 +71,7 @@ summary(data)
 After summarizing the data, we can see that most variables have 76 missing values.  After checking, these 76 values are missing for the same observations for all variables.  Hence, they will later be removed for the dataset.
 
 
-```{r, results = FALSE}
+```{r, echo=TRUE, results = 'hide'}
 describe(data)
 ```
 
@@ -127,7 +127,7 @@ mean((data.lm.pred - data.test$Overall) ^ 2)
 plot(data.lm.pred, data.test$Overall)
 ```
 
-```{r, results = FALSE}
+```{r, echo=TRUE, results='hide'}
 summary(lm(Overall ~ ., data = data.train))
 ```
 
@@ -135,13 +135,13 @@ summary(lm(Overall ~ ., data = data.train))
 
 Ramsey Reset Test
 
-```{r, results = FALSE}
+```{r, echo=TRUE, results='hide'}
 
 
 resettest(lm(Overall ~ ., data = data.train))
 
 ```
-```{r}
+```{r, echo=TRUE,results = FALSE}
 
 res2 <- rcorr(as.matrix(data[, -2]))
 res2$P
@@ -158,7 +158,11 @@ data <- data[,-20]
 
 ```
 
-```{r}
+
+We take the log of the target variable 'Overall'
+
+
+```{r, include = FALSE}
 set.seed(123456789)
 
 data$log_overall <- log(data$Overall)
@@ -185,8 +189,10 @@ resettest(lm(Overall ~ Age + Crossing+ Finishing+ HeadingAccuracy+ ShortPassing+
 ```
 
 
+We create the correlation matrix again, but decide not to remove any of the variables.
 
-```{r, echo = TRUE, results = 'hide'}
+
+```{r, echo = TRUE, results='hide'}
 res2 <- rcorr(as.matrix(data[, -2]))
 res2$P
 ```
@@ -195,7 +201,7 @@ res2$P
 
 
 
-```{r}
+```{r, include = FALSE}
 
 
 model1 <-lm(log(Overall) ~ ., data = data.train)
@@ -205,8 +211,10 @@ resettest(lm(log(Overall) ~ ., data = data.train))
 ```
 
 
+We Plot the correlations between the target variable and all explanatory variables to see if any of the relationships are logarithmic.
 
-```{r, echo = TRUE, results = 'hide'}
+
+```{r, echo = FALSE}
 #multiplots for scatterplots between dependent variable and the independent variables
 
 
@@ -256,6 +264,12 @@ grid.arrange(p25,p26,p27,p28,  nrow = 2)
 ```
 
 
+After visually analyzing the correlation plots, we decide to take the log of some explanatory variables.
+
+
+Next, we estimate the new model.
+
+
 
 ```{r}
 
@@ -277,41 +291,37 @@ resettest(lm(log(Overall) ~ Age + log(Crossing)+ log(Finishing)+ log(HeadingAccu
 summary(model2)
 ```
 
-```{r}
-#Prozess of deleting insignificant variables
 
+Process of deleting insignificant variables, one at a time.
+
+
+```{r, echo=TRUE, results='hide'}
 model2.1 <-lm(log(Overall) ~  Age + log(Crossing)+ log(Finishing)+ log(HeadingAccuracy)+ log(ShortPassing)+  log(Curve)+ log(FKAccuracy)+ log(LongPassing)+
      log(BallControl)+Acceleration+SprintSpeed+Agility+Reactions+Balance+ShotPower+
      Jumping+Stamina+log(LongShots)+Aggression+log(Interceptions)+log(Positioning)+ log(Vision)+ Penalties+
      Composure+Marking+StandingTackle+ SlidingTackle, data = data.train)
 
 summary(model2.1)
-
-
-
 ```
 
 
-```{r}
-#Prozess of deleting insignificant variables
+One more variable removed.
 
+
+```{r, echo=TRUE, results= 'hide'}
 model2.2 <-lm(log(Overall) ~  Age + log(Finishing)+ log(HeadingAccuracy)+ log(ShortPassing)+  log(Curve)+ log(FKAccuracy)+ log(LongPassing)+
      log(BallControl)+Acceleration+SprintSpeed+Agility+Reactions+Balance+ShotPower+
      Jumping+Stamina+log(LongShots)+Aggression+log(Interceptions)+log(Positioning)+ log(Vision)+ Penalties+
      Composure+Marking+StandingTackle+ SlidingTackle, data = data.train)
 
 summary(model2.2)
-
-
-
 ```
 
 
+We then estimated the final model with only significant variables
 
 
-```{r}
-#New model with only significant variables
-
+```{r, include = FALSE}
 model3 <-lm(log(Overall) ~  Age + log(Finishing)+ log(HeadingAccuracy)+ log(ShortPassing)+  log(Curve)+ log(FKAccuracy)+ 
      log(BallControl)+Acceleration+SprintSpeed+Agility+Reactions+Balance+ShotPower+
      Jumping+Stamina+log(LongShots)+Aggression+log(Interceptions)+log(Positioning)+ log(Vision)+ Penalties+
@@ -323,11 +333,10 @@ resettest(lm(log(Overall) ~ Age + log(Finishing)+ log(HeadingAccuracy)+ log(Shor
      log(BallControl)+Acceleration+SprintSpeed+Agility+Reactions+Balance+ShotPower+
      Jumping+Stamina+log(LongShots)+Aggression+log(Interceptions)+log(Positioning)+ log(Vision)+ Penalties+
      Composure+Marking+StandingTackle+ SlidingTackle, data = data.train))
-
 ```
 
 
-model 0 
+The initial model
 
 
 ```{r}
@@ -337,7 +346,8 @@ dataPredict0 <- predict(model0, data.test)
 mean((dataPredict0 - data.test$Overall) ^ 2)
 ```
 
-model 3
+
+Our final improved model
 
 
 ```{r}
