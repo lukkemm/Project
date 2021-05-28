@@ -51,7 +51,7 @@ The purpose of this project is to take the linear econometric model that was use
 
 ## Initial data Analysis
 
-```{r}
+```{r, results = FALSE}
 
 data <- read.csv2("ml2_dataFromInitialProject.csv")
 
@@ -71,7 +71,7 @@ summary(data)
 After summarizing the data, we can see that most variables have 76 missing values.  After checking, these 76 values are missing for the same observations for all variables.  Hence, they will later be removed for the dataset.
 
 
-```{r}
+```{r, results = FALSE}
 describe(data)
 ```
 
@@ -101,7 +101,7 @@ data <- na.omit(data)
 ```
 
 
-#The Initial model
+## The Initial model
 
 
 ```{r, echo = FALSE}
@@ -118,7 +118,7 @@ data.test  <- data[-training_obs,]
 
 
 
-```{r, echo = FALSE}
+```{r, include = FALSE}
 data.lm.pred <- predict(lm(Overall ~ ., data = data.train), data.test)
 mean((data.lm.pred - data.test$Overall) ^ 2)
 ```
@@ -127,10 +127,15 @@ mean((data.lm.pred - data.test$Overall) ^ 2)
 plot(data.lm.pred, data.test$Overall)
 ```
 
+```{r, results = FALSE}
+summary(lm(Overall ~ ., data = data.train))
+```
+
+
 
 Ramsey Reset Test
 
-```{r}
+```{r, results = FALSE}
 
 
 resettest(lm(Overall ~ ., data = data.train))
