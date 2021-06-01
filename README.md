@@ -14,7 +14,11 @@ Report structure: We go over the model which was already created in my other cla
 Description of files: 
 
 Initial Report.Rmd - The markdown file with the original project code
+
 Project_Regression.html - The knitted html file of the code above
+
 Project_Improvement.Rmd - The markdown file with our new project, the improved model
+
 Project_Improvement.html - The knitted html file of the code above
+
 ml2_dataFromInitialProject.csv - The dataset used in this project (same one for the initial project as well as our new, improved project)
